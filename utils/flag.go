@@ -9,6 +9,10 @@ var FilePath = flag.String("f", "", "указывает путь до конфи
 
 var Cmd = flag.String("c", "", "передает shell-команды на удаленный хост")
 
+var Src = flag.String("src", "", "передает файл который необходимо скопировать на локальном хосте")
+
+var Dst = flag.String("dst", "", "указывает файл в который необходимо скопировать на удаленном хосте")
+
 func ParseFlags() {
 	flag.Parse()
 
