@@ -20,5 +20,9 @@ func main() {
 			HostKeyCallback: ssh.InsecureIgnoreHostKey(),
 		}
 		utils.ExecuteCmd(*cmd, host.Name, config)
+		err := utils.CopyFile(*src, *dst, host.Name, config)
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 }
