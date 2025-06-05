@@ -1,6 +1,8 @@
 package main
 
 import (
+	"log"
+
 	"github.com/Holm1997/sshutil/utils"
 	"golang.org/x/crypto/ssh"
 )
@@ -10,6 +12,8 @@ func main() {
 	cmd := utils.Cmd
 	file := utils.FilePath
 	data := utils.ParseYamlFile(file)
+	src := utils.Src
+	dst := utils.Dst
 
 	for _, host := range data.Hosts {
 		config := &ssh.ClientConfig{
