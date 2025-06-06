@@ -46,7 +46,7 @@ func CopyFile(src string, dst string, hostname string, config *ssh.ClientConfig)
 	defer sftp.Close()
 
 	// Open the source file
-	srcFile, err := os.Open("test.txt")
+	srcFile, err := os.Open(src)
 	if err != nil {
 		return err
 	}
