@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/pkg/sftp"
 	"golang.org/x/crypto/ssh"
 )
 
@@ -32,29 +33,33 @@ func ExecuteCmd(cmd string, hostname string, config *ssh.ClientConfig) {
 }
 
 func CopyFile(src string, dst string, hostname string, config *ssh.ClientConfig) error {
-	client, err := ssh.Dial("tcp", hostname+":22", config)
-	if err != nil {
-		log.Fatal("Failed to dial: ", err)
-	}
+	client, _ := ssh.Dial("tcp", "10.55.96.119:22", config)
 	defer client.Close()
 
-	session, err := client.NewSession()
+	// open an SFTP session over an existing ssh connection.
+	sftp, err := sftp.NewClient(client)
 	if err != nil {
-		log.Fatal("Failed to create session: ", err)
+		return err
 	}
-	defer session.Close()
-	// Отправка файла
-	sourceFile, err := os.ReadFile(src)
+	defer sftp.Close()
+
+	// Open the source file
+	srcFile, err := os.Open(src)
 	if err != nil {
-		panic(err)
+		return err
 	}
+	defer srcFile.Close()
 
-	destinationPath := dst
-
-	// Открытие канала для передачи данных
-	_, err = session.Output(fmt.Sprintf("echo %s > %s", sourceFile, destinationPath))
+	// Create the destination file
+	dstFile, err := sftp.Create(dst)
 	if err != nil {
-		panic(err)
+		return err
+	}
+	defer dstFile.Close()
+
+	// write to file
+	if _, err := dstFile.ReadFrom(srcFile); err != nil {
+		return err
 	}
 
 	fmt.Println("Файл успешно передан")

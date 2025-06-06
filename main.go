@@ -4,7 +4,6 @@ import (
 	"log"
 
 	"github.com/Holm1997/sshutil/utils"
-	"golang.org/x/crypto/ssh"
 )
 
 func main() {
@@ -16,13 +15,7 @@ func main() {
 	dst := utils.Dst
 
 	for _, host := range data.Hosts {
-		config := &ssh.ClientConfig{
-			User: host.Login,
-			Auth: []ssh.AuthMethod{
-				ssh.Password(host.Pass),
-			},
-			HostKeyCallback: ssh.InsecureIgnoreHostKey(),
-		}
+		config := utils.CreateClientConfig(host.Name, host.Pass)
 		utils.ExecuteCmd(*cmd, host.Name, config)
 		err := utils.CopyFile(*src, *dst, host.Name, config)
 		if err != nil {
