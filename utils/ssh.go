@@ -10,7 +10,7 @@ import (
 	"golang.org/x/crypto/ssh"
 )
 
-func ExecuteCmd(cmd string, hostname string, config *ssh.ClientConfig) {
+func ExecuteCmd(cmd string, hostname string, config *ssh.ClientConfig) error {
 	client, err := ssh.Dial("tcp", hostname+":22", config)
 	if err != nil {
 		log.Fatal("Failed to dial: ", err)
@@ -30,10 +30,12 @@ func ExecuteCmd(cmd string, hostname string, config *ssh.ClientConfig) {
 	}
 
 	fmt.Println(b.String())
+	return nil
 }
 
 func CopyFile(src string, dst string, hostname string, config *ssh.ClientConfig) error {
-	client, _ := ssh.Dial("tcp", "10.55.96.119:22", config)
+	client, _ := ssh.Dial("tcp", hostname+":22", config)
+
 	defer client.Close()
 
 	// open an SFTP session over an existing ssh connection.
@@ -44,7 +46,7 @@ func CopyFile(src string, dst string, hostname string, config *ssh.ClientConfig)
 	defer sftp.Close()
 
 	// Open the source file
-	srcFile, err := os.Open(src)
+	srcFile, err := os.Open("test.txt")
 	if err != nil {
 		return err
 	}
@@ -62,6 +64,6 @@ func CopyFile(src string, dst string, hostname string, config *ssh.ClientConfig)
 		return err
 	}
 
-	fmt.Println("Файл успешно передан")
+	fmt.Printf("Файл %v успешно передан\n", srcFile.Name())
 	return nil
 }

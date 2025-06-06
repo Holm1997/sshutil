@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/Holm1997/sshutil/utils"
@@ -15,11 +16,17 @@ func main() {
 	dst := utils.Dst
 
 	for _, host := range data.Hosts {
-		config := utils.CreateClientConfig(host.Name, host.Pass)
-		utils.ExecuteCmd(*cmd, host.Name, config)
-		err := utils.CopyFile(*src, *dst, host.Name, config)
-		if err != nil {
-			log.Fatal(err)
+		config := utils.CreateClientConfig(host.Login, host.Pass)
+		fmt.Printf("-------[ %v ]-------\n", host.Name)
+		if utils.CmdExists {
+			utils.ExecuteCmd(*cmd, host.Name, config)
 		}
+		if utils.SrcDstExists {
+			err := utils.CopyFile(*src, *dst, host.Name, config)
+			if err != nil {
+				log.Fatal(err)
+			}
+		}
+		fmt.Println("-----------------------")
 	}
 }
