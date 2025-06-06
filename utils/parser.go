@@ -9,7 +9,8 @@ import (
 
 type HostsConfig struct {
 	Hosts []struct {
-		Name  string `yaml:"name"`
+		Host  string `yaml:"host"`
+		Port  string `yaml:"port"`
 		Login string `yaml:"login"`
 		Pass  string `yaml:"pass"`
 	} `yaml:"hosts"`

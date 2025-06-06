@@ -10,8 +10,8 @@ import (
 	"golang.org/x/crypto/ssh"
 )
 
-func ExecuteCmd(cmd string, hostname string, config *ssh.ClientConfig) error {
-	client, err := ssh.Dial("tcp", hostname+":22", config)
+func ExecuteCmd(cmd string, hostname string, port string, config *ssh.ClientConfig) error {
+	client, err := ssh.Dial("tcp", hostname+":"+port, config)
 	if err != nil {
 		log.Fatal("Failed to dial: ", err)
 	}
@@ -33,7 +33,7 @@ func ExecuteCmd(cmd string, hostname string, config *ssh.ClientConfig) error {
 	return nil
 }
 
-func CopyFile(src string, dst string, hostname string, config *ssh.ClientConfig) error {
+func CopyFile(src string, dst string, hostname string, port string, config *ssh.ClientConfig) error {
 	client, _ := ssh.Dial("tcp", hostname+":22", config)
 
 	defer client.Close()

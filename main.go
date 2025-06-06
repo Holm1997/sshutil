@@ -17,12 +17,18 @@ func main() {
 
 	for _, host := range data.Hosts {
 		config := utils.CreateClientConfig(host.Login, host.Pass)
-		fmt.Printf("-------[ %v ]-------\n", host.Name)
-		if utils.CmdExists {
-			utils.ExecuteCmd(*cmd, host.Name, config)
+		fmt.Printf("-------[ %v ]-------\n", host.Host)
+
+		if host.Port == "" {
+			host.Port = "22"
 		}
+
+		if utils.CmdExists {
+			utils.ExecuteCmd(*cmd, host.Host, host.Port, config)
+		}
+
 		if utils.SrcDstExists {
-			err := utils.CopyFile(*src, *dst, host.Name, config)
+			err := utils.CopyFile(*src, *dst, host.Host, host.Port, config)
 			if err != nil {
 				log.Fatal(err)
 			}
